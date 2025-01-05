@@ -21,7 +21,7 @@ export class Database {
   }
 
   insert(table, data) {
-    if (!this.#database[table] || Array.isArray(this.#database[table])) {
+    if (!Array.isArray(this.#database[table])) {
       this.#database[table] = []
     }
 
@@ -30,6 +30,19 @@ export class Database {
     this.#persist()
 
     return data
+  }
+
+  update(table, id, data) {
+    const rowIndex = this.#database[table].findIndex(row => row.id === id)
+
+    if (rowIndex === -1) {
+      return false
+    }
+
+    this.#database[table][rowIndex] = { id, ...data }
+    this.#persist()
+
+    return true
   }
 
   delete(table, id) {
